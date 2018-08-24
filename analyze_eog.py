@@ -145,7 +145,7 @@ fit_params = {}
 output = cross_validate(clf, X = X, y = y, scoring = ['accuracy'], cv = cv,
                         groups = subject_index, return_train_score = True,
                         fit_params=fit_params, verbose = 2,
-                        n_jobs = 6)
+                        n_jobs = 1)
 
 print("Train accuracy = %0.4f +- %0.4f"%(output['train_accuracy'].mean(), output['train_accuracy'].std()))
 print("Test accuracy = %0.4f +- %0.4f"%(output['test_accuracy'].mean(), output['test_accuracy'].std()))

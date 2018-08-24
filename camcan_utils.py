@@ -6,7 +6,7 @@ import pandas as pd
 import mne
 
 from joblib import Parallel, delayed
-from autoreject import get_rejection_threshold
+# from autoreject import get_rejection_threshold
 
 import config as cfg
 import library as lib
@@ -175,9 +175,9 @@ def get_bad_magnetometers_after_maxfilter(kind_id = 1, step = 10):
     return bad_mag
 
 
-def get_ica(raw, method = 'fastica',
-            n_components = 0.99,
-            bad_seconds = None,
+def get_ica(raw, method = 'fastica', # 'picard'
+            n_components = 0.99,     # 'raw.estimate_rank()'  for mag and grad
+            bad_seconds = None,     
             decim = 10,
             n_max_ecg = 3,
             n_max_eog = 2,

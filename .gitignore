@@ -1,0 +1,5 @@
+*.pyc
+/outputs
+/figures
+sample_raw.fif
+/data_mf_out

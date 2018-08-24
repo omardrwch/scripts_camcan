@@ -176,7 +176,10 @@ def run_classification(classifier_choice, X, y, subject_index):
 
 def plot_weights(weights, mfr, title = '', positive_only = True):
     # Load raw to get info about sensor positions
-    raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
+    raw_filename = 'sample_raw.fif'
+    raw = mne.io.read_raw_fif(raw_filename)
+
+    # raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
 
     # get sensor positions via layout
     pos = mne.find_layout(raw.info).pos[mfr.channels_picks, :]

@@ -120,7 +120,10 @@ print("Correlation between \
 #-------------------------------------------------------------------------------
 
 # Load raw to get info about sensor positions
-raw = camcan_utils.get_raw(mfr_mag.mf_subjects[0], 'rest')
+raw_filename = 'sample_raw.fif'
+raw = mne.io.read_raw_fif(raw_filename)
+# raw = camcan_utils.get_raw(mfr_mag.mf_subjects[0], 'rest')
+
 # get sensor positions via layout
 pos = mne.find_layout(raw.info).pos[mfr_mag.channels_picks, :]
 v_utils.plot_data_topo(correlations[0, :], pos, vmin = 0.0, vmax = 0.8, title = 'correlations for channel 1', cmap = 'Reds')

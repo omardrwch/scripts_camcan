@@ -12,7 +12,7 @@ from sklearn.model_selection import GroupShuffleSplit, cross_validate, GridSearc
 from sklearn.svm import LinearSVC
 
 
-N_JOBS = 10
+N_JOBS = 1
 
 # Set seed
 SEED      = 123
@@ -162,6 +162,11 @@ def run_classification(classifier_choice, X, y, subject_index):
         clf = GridSearchCV(estimator=svm, param_grid=p_grid, cv=gkf)
         fit_params = {'groups':subject_index}
 
+    elif classifier_choice == 2:
+        clf = RandomForestClassifier(n_estimators = 300,
+                                     random_state=SEED,
+                                     max_features = 1)
+        fit_params = {}                                 
 
 
     clf.fit(X, y, **fit_params)
@@ -216,7 +221,10 @@ def run_classification(classifier_choice, X, y, subject_index):
 
 def plot_weights(weights, mfr, title = '', positive_only = True):
     # Load raw to get info about sensor positions
-    raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
+    raw_filename = 'sample_raw.fif'
+    raw = mne.io.read_raw_fif(raw_filename)
+
+    # raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
 
     # get sensor positions via layout
     pos = mne.find_layout(raw.info).pos[mfr.channels_picks, :]

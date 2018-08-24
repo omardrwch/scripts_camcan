@@ -15,7 +15,7 @@ def get_io_info():
     # current folder
     current_dir = dirname(abspath(__file__))
     # project folder
-    project_dir = dirname(dirname(current_dir))
+    project_dir = current_dir #dirname(dirname(current_dir))
     # output folder
     camcan_output_dir = os.path.join(project_dir, 'data_mf_out', 'camcan')
 
