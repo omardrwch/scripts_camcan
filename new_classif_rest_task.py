@@ -26,7 +26,7 @@ SAVE             = True
 #-------------------------------------------------------------------------------
 
 # Choose index of MF parameters
-params_index = 3
+params_index = 0
 
 # Choose sensor type
 sensor_type = 'mag'
@@ -90,11 +90,8 @@ def get_features(features_choice, mfr):
     if features_choice == 0:
         H_rest = mfr.all_log_cumulants_rest[:, :, 0]  # (n_subjects, n_features)
         H_task = mfr.all_log_cumulants_task[:, :, 0]
-        n_subjects = mfr.n_subjects
-        y_rest = np.zeros(n_subjects)
-        y_task = np.ones(n_subjects)
-        subject_index = np.hstack(( np.arange(n_subjects), np.arange(n_subjects)))
 
+        X = np.vstack((H_rest, H_task))
 
     elif features_choice == 1:
         avgC2j_rest = (mfr.all_cumulants_rest[:, :, 1, 8:13]).mean(axis = 2)  # (n_subjects, n_features)
@@ -193,6 +190,29 @@ def get_features(features_choice, mfr):
         X      = np.vstack((feat_rest, feat_task))
 
 
+    elif features_choice == 500:
+        avgC2j_rest_eog = (mfr_eog.all_cumulants_rest[subject_idx_eog, :, 1, 8:13]).mean(axis = 2)  # (n_subjects, n_features)
+        avgC2j_task_eog = (mfr_eog.all_cumulants_task[subject_idx_eog, :, 1, 8:13]).mean(axis = 2)
+
+        feat_rest = avgC2j_rest_eog
+        feat_task = avgC2j_task_eog
+
+        X      = np.vstack((feat_rest, feat_task))
+
+    elif features_choice == 501:
+
+        avgC2j_rest = (mfr.all_cumulants_rest[:, :, 1, 8:13]).mean(axis = 2)  # (n_subjects, n_features)
+        avgC2j_task = (mfr.all_cumulants_task[:, :, 1, 8:13]).mean(axis = 2)
+
+        avgC2j_rest_eog = (mfr_eog.all_cumulants_rest[subject_idx_eog, :, 1, 8:13]).mean(axis = 2)  # (n_subjects, n_features)
+        avgC2j_task_eog = (mfr_eog.all_cumulants_task[subject_idx_eog, :, 1, 8:13]).mean(axis = 2)
+
+        feat_rest = np.hstack((avgC2j_rest, avgC2j_rest_eog)) 
+        feat_task = np.hstack((avgC2j_task, avgC2j_task_eog)) 
+
+        X      = np.vstack((feat_rest, feat_task))
+
+
     return X, y, subject_index
 
 
@@ -228,8 +248,8 @@ def plot_weights(weights, mfr, title = '', positive_only = False):
 # # Choose features
 # features = 0
 
-for classifier_name in ['random_forest_no_cv', 'linear_svm']:
-    for features in [300]:
+for classifier_name in ['linear_svm_scaled']:
+    for features in [0, 1, 2, 300]:
 
         features_str = None
         if features == 0:
@@ -250,7 +270,10 @@ for classifier_name in ['random_forest_no_cv', 'linear_svm']:
             features_str = 'EOGmaxminC2j'
         elif features == 300:
             features_str = 'c1_avgC2j'
-
+        elif features == 500:
+            features_str = 'EOGavgC2j'
+        elif features == 501:
+            features_str = 'avgC2j_EOGavgC2j'
 
         #===============================================================================
         # Load classification data
@@ -311,7 +334,8 @@ for classifier_name in ['random_forest_no_cv', 'linear_svm']:
         #===============================================================================
         # Plot feature importances
         #===============================================================================
-        try:
+        # try:
+        if True:
             if PLOT_IMPORTANCES:
                 plt.figure()
                 plt.title('Feature importances')
@@ -319,12 +343,12 @@ for classifier_name in ['random_forest_no_cv', 'linear_svm']:
 
 
                 if len(w) <= mfr.n_channels + 2:
-                    plot_weights(np.abs(w[0:mfr.n_channels]), mfr)
+                    plot_weights(np.abs(w[0:mfr.n_channels]), mfr, positive_only = positive_only)
                 else:
                     weights1 = w[0:mfr.n_channels]
                     weights2 = w[mfr.n_channels:2*mfr.n_channels]
-                    plot_weights(weights1, mfr)
-                    plot_weights(weights2, mfr)
+                    plot_weights(weights1, mfr, positive_only = positive_only)
+                    plot_weights(weights2, mfr, positive_only = positive_only)
 
                 if SHOW_PLOTS:
                     plt.show()
@@ -337,8 +361,8 @@ for classifier_name in ['random_forest_no_cv', 'linear_svm']:
                     filename =  os.path.join(outdir, filename)
                     plt.savefig(filename)
                     del filename
-        except:
-            pass
+        # except:
+        #     pass
 
 
         del X

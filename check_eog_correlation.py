@@ -18,6 +18,12 @@ from statsmodels.stats.multitest import multipletests
 from scipy.stats import linregress, pearsonr, spearmanr
 
 
+from pylab import rcParams
+rcParams['figure.figsize'] = 12, 12
+rcParams['mathtext.default'] = 'regular'
+rcParams['font.size'] = 20
+
+
 
 #-------------------------------------------------------------------------------
 # Load results

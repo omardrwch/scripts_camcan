@@ -74,18 +74,19 @@ channel_type = 'mag'
 #----------------------------------------------------------------------
 fignum = 'classification  with mf features'
 
-classifiers = ['linear_svm'] # ['linear_svm_scaled', 'linear_svm', 'random_forest']
+classifiers = ['linear_svm_scaled', 'linear_svm', 'random_forest']
 features_names = ['c1', 'avgC2j', 'maxminC2j', 'c1_avgC2j']
 
 #~~
-features_names_readable = ['$c_1$', 'avg($C_2(j)$)', 'maxmin($C_2(j)$', '$c_1$ and avg($C_2(j)$)']
-classifiers_readable    = ['Linear SVM', 'Random Forest']
+features_names_readable = ['$c_1$', 'avg($C_2(j)$)' ,'maxmin($C_2(j)$)', '$c_1$ and avg($C_2(j)$)']
+classifiers_readable    = ['Scaling + Linear SVM', 'Linear SVM', 'Random Forest']
 #~~
 
-mf_params_list =   [3, 0, 1, 2]
+
+mf_params_list =   [0]
 
 #~~
-formalism_readable = ['WCMF', 'p=$\infty$', 'p=1', 'p=2']
+formalism_readable = ['wlmf']#['WCMF', 'p=$\infty$', 'p=1', 'p=2']
 #~~
 
 
