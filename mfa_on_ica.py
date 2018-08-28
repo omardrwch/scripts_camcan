@@ -45,22 +45,22 @@ picks = mne.pick_types(sources.info, misc = True, eeg=False, stim=False, ecg=Fal
 data = sources.get_data(picks)
 
 
-#-------------------------------------------------------------------------------
-# MF analysis
-#-------------------------------------------------------------------------------
-mfa = mf.MFA(**params)
-mfa.verbose = 1
-
-
-N_COMPONENTS = 5 #data.shape[0]
-c2_list = []
-for ii in range(N_COMPONENTS):
-    signal = data[ii, :]
-    mfa.analyze(signal)
-    c2_list.append(mfa.cumulants.log_cumulants[1])
-    if ii == 0:
-        cumulants = mfa.cumulants
-    else:
-        cumulants.sum(mfa.cumulants)
-cumulants.plot()
-mfa.plt.show()
+# #-------------------------------------------------------------------------------
+# # MF analysis
+# #-------------------------------------------------------------------------------
+# mfa = mf.MFA(**params)
+# mfa.verbose = 1
+#
+#
+# N_COMPONENTS = 5 #data.shape[0]
+# c2_list = []
+# for ii in range(N_COMPONENTS):
+#     signal = data[ii, :]
+#     mfa.analyze(signal)
+#     c2_list.append(mfa.cumulants.log_cumulants[1])
+#     if ii == 0:
+#         cumulants = mfa.cumulants
+#     else:
+#         cumulants.sum(mfa.cumulants)
+# cumulants.plot()
+# mfa.plt.show()

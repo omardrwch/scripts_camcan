@@ -18,9 +18,6 @@ import h5py
 # Parameters
 #-------------------------------------------------------------------------------
 
-# Channel type
-MEG_TYPE = 'mag' # 'mag' or 'grad'
-
 # Subjects and conditions
 subjects = camcan_utils.subjects
 conditions = camcan_utils.kinds
@@ -30,7 +27,7 @@ mf_params = mf_config.get_mf_params()
 
 # Output folder
 mf_io_info = mf_config.get_io_info()
-camcan_output_dir = mf_io_info['camcan_output_dir'] + '_picard'
+camcan_output_dir = mf_io_info['camcan_output_dir'] + '_ica'
 
 if not os.path.exists(camcan_output_dir):
     os.makedirs(camcan_output_dir)
@@ -52,12 +49,25 @@ def single_mf_analysis(args):
         # Preprocess raw
         raw, ica = camcan_utils.preprocess_raw(raw, subject, condition)
 
-        # Pick MEG magnetometers or gradiometers
-        picks = mne.pick_types(raw.info, meg=MEG_TYPE, eeg=False, stim=False, eog=False,
-                               exclude='bads')
-        picks_ch_names = [raw.ch_names[i] for i in picks]
 
-        data = raw.get_data(picks)
+        #####
+        # get sources
+        sources = ica.get_sources(raw)
+
+        # pick good ICA components
+        picks = mne.pick_types(sources.info, misc = True, eeg=False, stim=False, ecg=False, eog=False,exclude='bads')
+        picks_ch_names = [sources.ch_names[i] for i in picks]
+
+        # get data
+        data = sources.get_data(picks)
+        ####
+
+        # # Pick MEG magnetometers or gradiometers
+        # picks = mne.pick_types(raw.info, meg=MEG_TYPE, eeg=False, stim=False, eog=False,
+        #                        exclude='bads')
+        # picks_ch_names = [raw.ch_names[i] for i in picks]
+        #
+        # data = raw.get_data(picks)
 
         # MF analysis object
         for params_index in params_index_list:
@@ -91,7 +101,7 @@ def single_mf_analysis(args):
             if not os.path.exists(subject_output_dir):
                 os.makedirs(subject_output_dir)
 
-            output_filename = os.path.join(subject_output_dir, condition + "_channel_%s_params_%d"%(MEG_TYPE, params_index) +'.h5')
+            output_filename = os.path.join(subject_output_dir, condition + "_ica_params_%d"%(params_index) +'.h5')
 
             with h5py.File(output_filename, "w") as f:
                 params_string = np.string_(str(params))
@@ -128,11 +138,11 @@ if __name__ == '__main__':
     for args in arg_instances:
         subject, condition, params_index_list, max_j = args
         subject_output_dir = os.path.join(camcan_output_dir, subject)
-        output_filename = os.path.join(subject_output_dir, condition + "_channel_%s_params_%d"%(MEG_TYPE, params_index_list[-1]) +'.h5')
+        output_filename = os.path.join(subject_output_dir, condition + "_ica_params_%d"%(params_index_list[-1]) +'.h5')
         if op.isfile(output_filename):
             continue
         else:
             new_arg_instances.append(args)
     arg_instances = new_arg_instances
 
-    Parallel(n_jobs=1, verbose=1, backend="threading")(map(delayed(single_mf_analysis), arg_instances))
+    Parallel(n_jobs=2, verbose=1, backend="multiprocessing")(map(delayed(single_mf_analysis), arg_instances))
