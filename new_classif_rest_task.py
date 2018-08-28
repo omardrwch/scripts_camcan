@@ -17,9 +17,9 @@ np.random.seed(RANDOM_STATE)
 
 PLOT_LEARNING    = True
 PLOT_IMPORTANCES = True
-SHOW_PLOTS       = False
+SHOW_PLOTS       = True
 
-SAVE             = True
+SAVE             = False
 
 #-------------------------------------------------------------------------------
 # Load results
@@ -92,6 +92,13 @@ def get_features(features_choice, mfr):
         H_task = mfr.all_log_cumulants_task[:, :, 0]
 
         X = np.vstack((H_rest, H_task))
+
+    elif features_choice == 1000:
+        c2_rest = mfr.all_log_cumulants_rest[:, :, 1].clip(max=0)  # (n_subjects, n_features)
+        c2_task = mfr.all_log_cumulants_task[:, :, 1].clip(max=0)
+
+        X = np.vstack((c2_rest, c2_task))
+
 
     elif features_choice == 1:
         avgC2j_rest = (mfr.all_cumulants_rest[:, :, 1, 8:13]).mean(axis = 2)  # (n_subjects, n_features)
@@ -248,8 +255,8 @@ def plot_weights(weights, mfr, title = '', positive_only = False):
 # # Choose features
 # features = 0
 
-for classifier_name in ['linear_svm_scaled']:
-    for features in [0, 1, 2, 300]:
+for classifier_name in ['random_forest_no_cv']:
+    for features in [1000]:
 
         features_str = None
         if features == 0:
@@ -274,6 +281,8 @@ for classifier_name in ['linear_svm_scaled']:
             features_str = 'EOGavgC2j'
         elif features == 501:
             features_str = 'avgC2j_EOGavgC2j'
+        elif features == 1000:
+            features_str = 'c2'
 
         #===============================================================================
         # Load classification data
