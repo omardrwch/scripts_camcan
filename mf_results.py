@@ -74,7 +74,7 @@ class MF_Results():
         self.ch_name2number = None
         self.ch_name2index  = None
 
-def get_results(params_index = 0, sensor_type = 'mag', conditions = ['rest', 'task']):
+def get_results(params_index = 0, sensor_type = 'mag', conditions = ['rest', 'task'], option = None):
 
     #-------------------------------------------------------------------------------
     # Parameters
@@ -94,6 +94,10 @@ def get_results(params_index = 0, sensor_type = 'mag', conditions = ['rest', 'ta
     mf_io_info = mf_config.get_io_info()
     camcan_output_dir = mf_io_info['camcan_output_dir']
 
+    if option == 'picard':
+        camcan_output_dir += '_picard'
+
+    print(camcan_output_dir)
     #-------------------------------------------------------------------------------
     # Read files
     #-------------------------------------------------------------------------------

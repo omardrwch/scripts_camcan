@@ -44,23 +44,27 @@ def get_freqs(fs, j1, j2):
 # Load results
 #-------------------------------------------------------------------------------
 
+#Option
+option = 'picard'
+
 # Choose index of MF parameters
-params_index = 0
+params_index = 1
 
 # Choose sensor type
 sensor_type = 'mag'
 mfr = mf_results.get_results(params_index = params_index,
                              sensor_type = sensor_type,
-                             conditions = ['rest', 'task'])
+                             conditions = ['rest', 'task'],
+                             option = option)
 
 #-------------------------------------------------------------------------------
 # Averages and topomaps
 #-------------------------------------------------------------------------------
 
 # Load raw to get info about sensor positions
-raw_filename = 'sample_raw.fif'
-raw          = raw = mne.io.read_raw_fif(raw_filename)
-#raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
+# raw_filename = 'sample_raw.fif'
+# raw          = mne.io.read_raw_fif(raw_filename)
+raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
 
 # get sensor positions via layout
 pos = mne.find_layout(raw.info).pos[mfr.channels_picks, :]
