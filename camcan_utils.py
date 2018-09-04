@@ -63,7 +63,7 @@ def _run_maxfilter(raw, subject, kind):
 
 
 def get_ica(raw, method = 'picard', # 'picard'
-            n_components = None,     # 'raw.estimate_rank()'  for mag and grad
+            n_components = 0.99,     # 'raw.estimate_rank()'  for mag and grad
             bad_seconds = None,
             decim = 10,
             n_max_ecg = 3,
@@ -210,7 +210,7 @@ def get_raw(subject, kind):
 if __name__ == '__main__':
 
     # Select subject and condition
-    subject_ind = 165 #485  # for 252, fastica does not converge
+    subject_ind = 252 #485  # for 252, fastica does not converge
     subject = subjects[subject_ind]
     kind    = 'task'
 
