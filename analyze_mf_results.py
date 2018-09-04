@@ -62,9 +62,9 @@ mfr = mf_results.get_results(params_index = params_index,
 #-------------------------------------------------------------------------------
 
 # Load raw to get info about sensor positions
-# raw_filename = 'sample_raw.fif'
-# raw          = mne.io.read_raw_fif(raw_filename)
-raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
+raw_filename = 'sample_raw.fif'
+raw          = mne.io.read_raw_fif(raw_filename)
+# raw = camcan_utils.get_raw(mfr.mf_subjects[0], 'rest')
 
 # get sensor positions via layout
 pos = mne.find_layout(raw.info).pos[mfr.channels_picks, :]
@@ -124,7 +124,7 @@ if mfr.sensor_type == 'mag':
     sensor1_name = 'MEG0511'
     sensor1_index = mfr.ch_name2index[sensor1_name]
 
-    v_utils.plot_cumulants( [avg_cumulants_rest[sensor1_index, 0, :], avg_cumulants_task[sensor1_index, 0, :] ],
+    v_utils.plot_cumulants_2( [mfr.all_cumulants_rest[:, sensor1_index, 0, :], mfr.all_cumulants_task[:, sensor1_index, 0, :] ],
                     title ='H rest/task - ' + sensor1_name,
                     labels = ['rest', 'task'], idx = 0)
 
@@ -134,7 +134,7 @@ if mfr.sensor_type == 'mag':
     sensor2_index = mfr.ch_name2index[sensor2_name]
     sensor3_index = mfr.ch_name2index[sensor3_name]
 
-    v_utils.plot_cumulants( [avg_cumulants_rest[sensor2_index, 0, :], avg_cumulants_rest[sensor3_index, 0, :] ],
+    v_utils.plot_cumulants_2( [mfr.all_cumulants_rest[:, sensor2_index, 0, :], mfr.all_cumulants_rest[:, sensor3_index, 0, :] ],
                     title ='H rest - ' + sensor2_name + ' vs. ' + sensor3_name,
                     labels = [sensor2_name, sensor3_name], idx = 0)
 
@@ -142,13 +142,13 @@ if mfr.sensor_type == 'mag':
     # Sensor compare M rest vs task
     sensor4_name = 'MEG1621'
     sensor4_index = mfr.ch_name2index[sensor4_name]
-    v_utils.plot_cumulants( [avg_cumulants_rest[sensor4_index, 1, :], avg_cumulants_task[sensor4_index, 1, :] ],
+    v_utils.plot_cumulants_2( [mfr.all_cumulants_rest[:, sensor4_index, 1, :], mfr.all_cumulants_task[:, sensor4_index, 1, :] ],
                     title ='M rest/task - ' + sensor4_name,
                     labels = ['rest', 'task'], idx = 1)
 
     sensor5_name = 'MEG0811'
     sensor5_index = mfr.ch_name2index[sensor5_name]
-    v_utils.plot_cumulants( [avg_cumulants_rest[sensor5_index, 1, :], avg_cumulants_task[sensor5_index, 1, :] ],
+    v_utils.plot_cumulants_2( [mfr.all_cumulants_rest[:, sensor5_index, 1, :], mfr.all_cumulants_task[:, sensor5_index, 1, :] ],
                     title ='M rest/task - ' + sensor5_name,
                     labels = ['rest', 'task'], idx = 1)
 

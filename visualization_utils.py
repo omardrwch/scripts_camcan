@@ -55,6 +55,45 @@ def plot_cumulants(cumulants_list, j1=9, j2=13, title = '', labels = None, idx =
     plt.legend()
     plt.grid()
 
+def plot_cumulants_2(cumulants_list, j1=9, j2=13, title = '', labels = None, idx = None):
+    colors = ['b', 'r']
+    x_reg  = np.arange(j1, j2+1)
+    plt.figure()
+    plt.title(title)
+    for ii, cumulants in enumerate(cumulants_list):
+        x_plot = np.arange(1, cumulants.shape[1]+1)
+        y_plot = cumulants.mean(axis = 0)
+        y_std  = cumulants.std(axis = 0)
+
+        y_reg  = y_plot[j1-1:j2]
+        if labels is not None:
+            plt.plot(x_plot, y_plot, colors[ii]+'o--', alpha = 0.75)
+        else:
+            plt.plot(x_plot, y_plot, colors[ii]+'o--', alpha = 0.75)
+
+        plt.fill_between(x_plot, y_plot - y_std,
+                         y_plot + y_std, alpha=0.1,
+                         color=colors[ii])
+
+        # linear regression
+        log2_e  = np.log2(np.exp(1))
+        slope, intercept, r_value, p_value, std_err = linregress(x_reg,y_reg)
+        y1 = slope*j1 + intercept
+        y2 = slope*j2 + intercept
+        log_cumul = log2_e*slope
+        plt.plot( [j1, j2], [y1, y2], colors[ii]+'-', linewidth=2,
+                  label = labels[ii]+', slope*log2(e) = %0.3f'%log_cumul)
+
+
+    plt.xlabel('j')
+    if idx is None:
+        plt.ylabel('C(j)')
+    else:
+        plt.ylabel('$C_%d(j)$'%(idx+1))
+    plt.legend()
+    plt.grid()
+
+
 def plot_sensors(sensor_name_list, pos, mfr):
     for sensor_name in sensor_name_list:
         sensor_index = mfr.ch_name2index[sensor_name]
