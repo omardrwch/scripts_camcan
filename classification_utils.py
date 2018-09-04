@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC, LinearSVC
-from sklearn.model_selection import GridSearchCV, GroupShuffleSplit, cross_validate, learning_curve
+from sklearn.model_selection import GridSearchCV, GroupShuffleSplit, cross_validate, learning_curve, cross_val_score
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
 from sklearn.pipeline import make_pipeline
@@ -236,3 +236,19 @@ def run_classification(classifier_name,
 
 
     return train_sizes_abs, train_scores, test_scores, w, positive_only
+
+
+def simple_classification(classifier_name, X, y, groups, train_size, scoring = 'accuracy', n_splits = 15, random_state=42):
+    inner_cv  = GroupShuffleSplit(n_splits= n_splits, 
+                                  test_size = 1-train_size, 
+                                  random_state = random_state)
+
+    outer_cv  = GroupShuffleSplit(n_splits= n_splits, 
+                                  test_size = 1-train_size, 
+                                  random_state = random_state)
+
+    clf, fit_params = get_classifier(classifier_name, inner_cv, groups)
+
+    scores = cross_val_score(clf, X, y, cv=outer_cv, scoring = scoring, fit_params=fit_params, groups=groups)
+
+    return scores
