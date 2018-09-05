@@ -72,7 +72,7 @@ def plot_cumulants_2(cumulants_list, j1=9, j2=13, title = '', labels = None, idx
             plt.plot(x_plot, y_plot, colors[ii]+'o--', alpha = 0.75)
 
         plt.fill_between(x_plot, y_plot - y_std,
-                         y_plot + y_std, alpha=0.1,
+                         y_plot + y_std, alpha=0.25,
                          color=colors[ii])
 
         # linear regression
@@ -86,10 +86,11 @@ def plot_cumulants_2(cumulants_list, j1=9, j2=13, title = '', labels = None, idx
 
 
     plt.xlabel('j')
-    if idx is None:
-        plt.ylabel('C(j)')
-    else:
+    if idx in [0, 1]:
         plt.ylabel('$C_%d(j)$'%(idx+1))
+    else:
+        plt.ylabel(idx)
+
     plt.legend()
     plt.grid()
 
