@@ -78,22 +78,22 @@ def run_vis_and_classif(feats_rest, feats_task, title = '', feat_name = '', feat
 
     print("%s crossval score = %0.3f +- %0.3f"%(feat_name, scores.mean(), scores.std()))
 
-# #---------------------------------------------------------------------------------
-# # Vis and classif - Mean c1
-# #---------------------------------------------------------------------------------
-# run_vis_and_classif(mfr.mean_c1_rest, mfr.mean_c1_task, title = 'mean $c_1$', feat_name = 'mean c1', feat_dim = 1)
+#---------------------------------------------------------------------------------
+# Vis and classif - Mean c1
+#---------------------------------------------------------------------------------
+run_vis_and_classif(mfr.mean_c1_rest, mfr.mean_c1_task, title = 'mean $c_1$', feat_name = 'mean c1', feat_dim = 1)
 
 
-# #---------------------------------------------------------------------------------
-# # Vis and classif - Max c1
-# #---------------------------------------------------------------------------------
-# run_vis_and_classif(mfr.max_c1_rest, mfr.max_c1_task, title = 'max $c_1$', feat_name = 'max c1', feat_dim = 1)
+#---------------------------------------------------------------------------------
+# Vis and classif - Max c1
+#---------------------------------------------------------------------------------
+run_vis_and_classif(mfr.max_c1_rest, mfr.max_c1_task, title = 'max $c_1$', feat_name = 'max c1', feat_dim = 1)
 
 
-# #---------------------------------------------------------------------------------
-# # Vis and classif - Min c1
-# #---------------------------------------------------------------------------------
-# run_vis_and_classif(mfr.min_c1_rest, mfr.min_c1_task, title = 'min $c_1$', feat_name = 'min c1', feat_dim = 1)
+#---------------------------------------------------------------------------------
+# Vis and classif - Min c1
+#---------------------------------------------------------------------------------
+run_vis_and_classif(mfr.min_c1_rest, mfr.min_c1_task, title = 'min $c_1$', feat_name = 'min c1', feat_dim = 1)
 
 
 
