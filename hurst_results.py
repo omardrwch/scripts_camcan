@@ -99,11 +99,14 @@ def get_results(sensor_type = 'mag', conditions = ['rest', 'task'], option = Non
         mf_results[subject] = {}
         for condition in conditions:
 
-            filename = op.join(camcan_output_dir,
-                               subject,
-                               condition + "_channel_%s_hurst.h5"%sensor_type)
-
-
+            if sensor_type == 'mag':
+                filename = op.join(camcan_output_dir,
+                                   subject,
+                                   condition + "_channel_%s_hurst.h5"%sensor_type)
+            elif sensor_type == 'eog':
+                filename = op.join(camcan_output_dir + '_eog',
+                                   subject,
+                                   condition + "_hurst_eog.h5")
 
             if op.isfile(filename):
                 mf_results[subject][condition] = {}
@@ -134,6 +137,7 @@ def get_results(sensor_type = 'mag', conditions = ['rest', 'task'], option = Non
     # Subjects with all mf analysis computed
     mf_subjects = [s for s in subjects if s not in subjects_incomplete]
     n_subjects  = len(mf_subjects)
+
     n_channels  = n_channels_list[0] # assuming all channels are present in all subjects
 
     # Channels picks and names (assuming all subjects have the same set of channels)

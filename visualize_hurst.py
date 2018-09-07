@@ -22,7 +22,8 @@ rcParams['font.size'] = 20
 
 # Load results
 sensor_type = 'mag'
-hurst_data = hurst_results.get_results(sensor_type=sensor_type)
+hurst_data     = hurst_results.get_results(sensor_type=sensor_type)
+eog_hurst_data = hurst_results.get_results(sensor_type='eog')
 
 
 #-------------------------------------------------------------------------------
@@ -30,9 +31,9 @@ hurst_data = hurst_results.get_results(sensor_type=sensor_type)
 #-------------------------------------------------------------------------------
 
 # Load raw to get info about sensor positions
-# raw_filename = 'sample_raw.fif'
-# raw          = mne.io.read_raw_fif(raw_filename)
-raw = camcan_utils.get_raw(hurst_data.mf_subjects[0], 'rest')
+raw_filename = 'sample_raw.fif'
+raw          = mne.io.read_raw_fif(raw_filename)
+# raw = camcan_utils.get_raw(hurst_data.mf_subjects[0], 'rest')
 
 # get sensor positions via layout
 pos = mne.find_layout(raw.info).pos[hurst_data.channels_picks, :]
@@ -45,6 +46,8 @@ vmax = np.abs((hurst_data.all_hurst_rest - hurst_data.all_hurst_task).mean(axis=
 vmin = 0
 v_utils.plot_data_topo(hurst_data.all_hurst_rest.mean(axis=0) - hurst_data.all_hurst_task.mean(axis=0),
                         pos, vmin = vmin, vmax = vmax, title = '(H rest) - (H task)', cmap = 'Reds')
+v_utils.plot_data_topo((hurst_data.all_hurst_rest - hurst_data.all_hurst_task).std(axis=0),
+                        pos, vmin = vmin, vmax = vmax, title = 'Standard deviation of (H rest) - (H task)', cmap = 'Reds')
 
 
 #-------------------------------------------------------------------------------
@@ -60,8 +63,20 @@ def visualize_structure(sensor_name):
                     title ='Mean structure function - ' + sensor_name,
                     labels = ['rest', 'task'], idx = '$\log_2(S(j,2))$')
 
+def visualize_structure_eog(sensor_index):
+    log2Sj2_rest = eog_hurst_data.all_log2_Sj_2_rest[:, sensor_index, :]
+    log2Sj2_task = eog_hurst_data.all_log2_Sj_2_task[:, sensor_index, :]
+
+    v_utils.plot_cumulants_2( [log2Sj2_rest, log2Sj2_task ],
+                    title ='EOG Mean structure function - channel %d'%(sensor_index+1),
+                    labels = ['rest', 'task'], idx = '$\log_2(S(j,2))$')
+
+
 visualize_structure('MEG0311')
 visualize_structure('MEG1841')
+
+visualize_structure_eog(0)
+visualize_structure_eog(1)
 
 raw.plot_sensors()
 plt.show()
